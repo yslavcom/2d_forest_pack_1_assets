@@ -37,11 +37,12 @@ public class Player : MonoBehaviour {
 
     void Update()
     {
+        Swipe.StTap tap = SwipeControl.Tap;
 
-        if (SwipeControl.Tap)
+        if (tap.Tap)
         {
             //this should convert from pixels to world coordinates
-            mouse_tap_x = SwipeControl.TapCoordinates.x;
+            mouse_tap_x = tap.Coord.x;
             var objPos = graphics.transform.position;
             object_in_pixels = (Vector2)cam.WorldToScreenPoint(objPos);
 
