@@ -577,6 +577,48 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8d218001a1e147542bc5a9058259e49f, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &560643352
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 560643354}
+  - component: {fileID: 560643353}
+  m_Layer: 0
+  m_Name: EventManagerSwipe
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &560643353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 560643352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec32489de6ded0b4d820367c5077c9b1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  event_name: swiped
+  _player: {fileID: 1223836683}
+--- !u!4 &560643354
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 560643352}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.19594073, y: 0.5158891, z: 0.15933804}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &655439534
 Prefab:
   m_ObjectHideFlags: 0
@@ -812,7 +854,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 839748912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2355146, y: 4.0041056, z: -10}
+  m_LocalPosition: {x: 1.2067032, y: 4.0041056, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -870,7 +912,7 @@ GameObject:
   - component: {fileID: 847156374}
   - component: {fileID: 847156373}
   m_Layer: 0
-  m_Name: Swipe
+  m_Name: TouchOrMouseInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -887,8 +929,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 053d868edeb35304083f7cd990b3ea1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Boundary: 1
-  vec2StartTouchTap: {x: 0, y: 0}
+  _swipe_event_name: swiped
+  _swipe:
+    _distance: {x: 0, y: 0}
 --- !u!4 &847156374
 Transform:
   m_ObjectHideFlags: 0
@@ -1184,7 +1227,6 @@ GameObject:
   - component: {fileID: 1223836680}
   - component: {fileID: 1223836681}
   - component: {fileID: 1223836682}
-  - component: {fileID: 1223836684}
   - component: {fileID: 1223836683}
   m_Layer: 0
   m_Name: Player
@@ -1201,7 +1243,7 @@ Transform:
   m_GameObject: {fileID: 1223836679}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 115527583}
   m_Father: {fileID: 0}
@@ -1263,39 +1305,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33b6d5b46432a234790b10d47221e67f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
-  rotation_speed: 5
-  graphics: {fileID: 115527583}
-  skeletonAnimation: {fileID: 415010002}
-  SwipeControl: {fileID: 847156373}
-  mouse_tap_x: 0
-  object_in_pixels: {x: 0, y: 0}
---- !u!68 &1223836684
-EdgeCollider2D:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1223836679}
-  m_Enabled: 0
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
-  m_Points:
-  - {x: -0.5, y: 0}
-  - {x: -2.0499163, y: 0.43064356}
-  - {x: -1.8552488, y: 2.2444255}
-  - {x: -3.198197, y: 3.614128}
-  - {x: -6.261796, y: 2.9574664}
-  - {x: -8.053271, y: 4.127762}
-  - {x: -3.4584053, y: 5.621289}
-  - {x: -0.40884447, y: 9.921516}
-  - {x: 4.3851366, y: 6.2559643}
-  - {x: 4.0774913, y: 4.5861225}
-  - {x: 0.5, y: 0}
+  _speed: 5
+  _rotation_speed: 5
+  _graphics: {fileID: 115527583}
+  _skeletonAnimation: {fileID: 415010002}
+  _touch_or_mouse: {fileID: 847156373}
+  y_force: 10
+  x_force: 10
 --- !u!4 &1266838246 stripped
 Transform:
   m_PrefabParentObject: {fileID: 491764, guid: 3924a79017b5d7540ae4ccef22820213, type: 2}
@@ -1520,7 +1536,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1345790802}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.2355146, y: 4.0041056, z: -10}
+  m_LocalPosition: {x: 1.2067032, y: 4.0041056, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1826667372}
