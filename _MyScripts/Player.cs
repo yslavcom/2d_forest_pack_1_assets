@@ -16,7 +16,7 @@ public class Player : MonoBehaviour {
     public float _y_force_scale = 1f;
     public float _x_force_scale = 1f;
 
-    private float _x;
+    //private float _x;
     private Rigidbody2D _rigidBody2D;
     private string _currentAnimation = "";
     private Quaternion _goalRotation = Quaternion.identity;
@@ -34,11 +34,15 @@ public class Player : MonoBehaviour {
         TouchOrMouseInput.StTap tap = _touch_or_mouse.Tap;
         if (tap.Tap)
         {
-            _goalRotation = apply_tap(tap);
+            Vector3 new_position;
+            _goalRotation = ApplyTap(tap, out new_position);
+            _graphics.transform.position = new_position;
         }
         else
         {
-            _goalRotation = apply_key_left_right();
+            Vector3 new_position;
+            _goalRotation = ApplyKeyLeftRight(out new_position);
+            _graphics.transform.position = new_position;
         }
 
         _graphics.localRotation = Quaternion.Lerp(_graphics.localRotation, _goalRotation, _rotation_speed * Time.deltaTime);
@@ -53,11 +57,10 @@ public class Player : MonoBehaviour {
     }
 
     void FixedUpdate () {
-        _rigidBody2D.velocity = new Vector2(_x, _rigidBody2D.velocity.y);
-	}
+    }
 
-    #region PrivateHelpFunctions
-    Quaternion apply_tap(TouchOrMouseInput.StTap tap)
+#region PrivateHelpFunctions
+    Quaternion ApplyTap(TouchOrMouseInput.StTap tap, out Vector3 new_position)
     {
         Quaternion goal_rotation = _goalRotation;
 
@@ -66,15 +69,16 @@ public class Player : MonoBehaviour {
         var objPos = _graphics.transform.position;
         Vector2 object_in_pixels = (Vector2)_cam.WorldToScreenPoint(objPos);
 
+        float x = 0;
         if (mouse_tap_x > object_in_pixels.x)
         {
-            _x = _speed;
+            x = _speed * Time.deltaTime;
             goal_rotation = Quaternion.Euler(0, 0, 0);
             SetAnimation("walk", true);
         }
         else if (mouse_tap_x < object_in_pixels.x)
         {
-            _x = -_speed;
+            x = -_speed * Time.deltaTime;
             goal_rotation = Quaternion.Euler(0, 180, 0);
             SetAnimation("walk", true);
         }
@@ -83,23 +87,28 @@ public class Player : MonoBehaviour {
             SetAnimation("debugfade", true);
         }
 
+        objPos.x += x;
+        new_position = objPos;
+
         return goal_rotation;
     }
 
-    Quaternion apply_key_left_right()
+    Quaternion ApplyKeyLeftRight( out Vector3 new_position)
     {
         Quaternion goal_rotation = _goalRotation;
+        var objPos = _graphics.transform.position;
 
-        _x = Input.GetAxis("Horizontal") * _speed;
-        if (_x > 0)
+        float x = Input.GetAxis("Horizontal") * _speed * Time.deltaTime;
+        objPos.x += x;
+        new_position = objPos;
+
+        if (x > 0)
         {
-            Debug.Log("x_key-right = " + _x);
             goal_rotation = Quaternion.Euler(0, 0, 0);
             SetAnimation("walk", true);
         }
-        else if (_x < 0)
+        else if (x < 0)
         {
-            Debug.Log("x_key-left = " + _x);
             goal_rotation = Quaternion.Euler(0, 180, 0);
             SetAnimation("walk", true);
         }
@@ -110,10 +119,11 @@ public class Player : MonoBehaviour {
 
         return goal_rotation;
     }
-    #endregion
+#endregion
 
     public void DoSwipeOnPlayer()
     {
+#if false
         Vector2 swiped_vector = _touch_or_mouse.Swiped.Distance;
         Vector2 swiped_vector_world_point = _cam.ScreenToWorldPoint(swiped_vector);
 
@@ -122,6 +132,6 @@ public class Player : MonoBehaviour {
         //_rigidBody2D.AddForce(new Vector3(swiped_vector.x * _x_force_scale, swiped_vector.y * _y_force_scale, 0));
         _x = swiped_vector.x * _x_force_scale;
         //_y = swiped_vector.y * _y_force_scale;
-
+#endif
     }
 }
