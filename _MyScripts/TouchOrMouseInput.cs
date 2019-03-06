@@ -47,6 +47,11 @@ public class TouchOrMouseInput : MonoBehaviour
         {
             _distance = end-start;
         }
+
+        public bool BoZero()
+        {
+            return _distance == Vector2.zero;
+        }
     }
     #endregion
 
@@ -72,7 +77,10 @@ public class TouchOrMouseInput : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             _swipe = new StSwipe(_tap.Coord, Input.mousePosition);
-            EventManager.TriggerEvent(_swipe_event_name);
+            if (!_swipe.BoZero())
+            {
+                EventManager.TriggerEvent(_swipe_event_name);
+            }
 
             _tap.Tap = false;
             _tap.Coord = Vector2.zero;
@@ -91,7 +99,10 @@ public class TouchOrMouseInput : MonoBehaviour
                 || Input.touches[0].phase == TouchPhase.Canceled)
             {
                 _swipe = new StSwipe(_tap.Coord, Input.touches[0].position);
-                EventManager.TriggerEvent(_swipe_event_name);
+                if (!_swipe.BoZero())
+                {
+                    EventManager.TriggerEvent(_swipe_event_name);
+                }
 
                 _tap.Tap = false;
                 _tap.Coord = Vector2.zero;

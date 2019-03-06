@@ -12,23 +12,23 @@ public class SceneControl : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (Input.GetKey(KeyCode.T))
-        //if(Input.GetKeyDown("TestLoadNextScene"))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             SceneManager.LoadScene(sceneName: "scene_2");
         }
 
-        if (Input.GetKey(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             if (null != orange_skybox)
             {
                 RenderSettings.skybox = orange_skybox;
             }
         }
-
-        if (Input.GetKey(KeyCode.G))
+#if false
+        if (Input.GetKeyDown(KeyCode.G))
         {
             ppProfile.grain.enabled = false;
         }
+#endif
     }
 }

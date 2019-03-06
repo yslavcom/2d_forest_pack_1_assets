@@ -13,20 +13,22 @@ public class Player : MonoBehaviour {
     public SkeletonAnimation _skeletonAnimation;
     public TouchOrMouseInput _touch_or_mouse;
 
-    public float _y_force_scale = 1f;
-    public float _x_force_scale = 1f;
+    public float _y_force_scale = 0.01f;
+    public float _x_force_scale = 0.01f;
 
-    //private float _x;
     private Rigidbody2D _rigidBody2D;
     private string _currentAnimation = "";
     private Quaternion _goalRotation = Quaternion.identity;
     private Camera _cam;
+
+    private PlayerCollider _playerCollider;
 
     private void Start()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _cam = Camera.main;
 
+        _playerCollider = GetComponent<PlayerCollider>();
     }
 
     void Update()
@@ -119,19 +121,40 @@ public class Player : MonoBehaviour {
 
         return goal_rotation;
     }
-#endregion
 
+    #endregion
+
+    #region CalledByEvents
+    public int _swipe_count;
+    public Vector2 _swipe_vec;
     public void DoSwipeOnPlayer()
     {
 #if false
-        Vector2 swiped_vector = _touch_or_mouse.Swiped.Distance;
-        Vector2 swiped_vector_world_point = _cam.ScreenToWorldPoint(swiped_vector);
+        Vector2 swiped_vector = (Vector2)_cam.ViewportToWorldPoint(_touch_or_mouse.Swiped.Distance);
 
-        Debug.Log("swiped_vector_X = " + swiped_vector.x);
-        Debug.Log("swiped_vector_Y = " + swiped_vector.y);
-        //_rigidBody2D.AddForce(new Vector3(swiped_vector.x * _x_force_scale, swiped_vector.y * _y_force_scale, 0));
-        _x = swiped_vector.x * _x_force_scale;
-        //_y = swiped_vector.y * _y_force_scale;
+        float x0 = _rigidBody2D.velocity.x;
+        float y0 = _rigidBody2D.velocity.y;
+
+        float x = swiped_vector.x;
+        float y = swiped_vector.y;
+
+        var t = Time.deltaTime;
+        float v_x0 = (x - x0) / t;
+        float v_y0 = (y - y0) / t - 4.9f * t;
+
+        _rigidBody2D.AddForce(new Vector2(v_x0, v_y0) * _rigidBody2D.mass, ForceMode2D.Impulse);
+
+#else
+        Vector2 swiped_vector = _touch_or_mouse.Swiped.Distance;
+        Debug.Log("swiped count = " + _swipe_count);
+        _swipe_count++;
+
+        if (_playerCollider.BoGrounded)
+        {
+            _rigidBody2D.AddForce(new Vector2(swiped_vector.x * _x_force_scale, swiped_vector.y * _y_force_scale), ForceMode2D.Impulse);
+            _swipe_vec = new Vector2(swiped_vector.x, swiped_vector.y);
+        }
 #endif
     }
+#endregion
 }
