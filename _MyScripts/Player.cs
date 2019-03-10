@@ -16,19 +16,21 @@ public class Player : MonoBehaviour {
     public float _y_force_scale = 0.01f;
     public float _x_force_scale = 0.01f;
 
+    public LayerMask groundLayer;
+
     private Rigidbody2D _rigidBody2D;
     private string _currentAnimation = "";
     private Quaternion _goalRotation = Quaternion.identity;
     private Camera _cam;
 
-    private PlayerCollider _playerCollider;
+    //private PlayerCollider _playerCollider;
 
     private void Start()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _cam = Camera.main;
 
-        _playerCollider = GetComponent<PlayerCollider>();
+      //  _playerCollider = GetComponent<PlayerCollider>();
     }
 
     void Update()
@@ -122,6 +124,21 @@ public class Player : MonoBehaviour {
         return goal_rotation;
     }
 
+    bool IsGrounded()
+    {
+        Vector2 position = _graphics.transform.position;
+        Vector2 direction = Vector2.down;
+        float distance = 1.0f;
+
+        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+        if (hit.collider != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     #endregion
 
     #region CalledByEvents
@@ -149,12 +166,13 @@ public class Player : MonoBehaviour {
         Debug.Log("swiped count = " + _swipe_count);
         _swipe_count++;
 
-        if (_playerCollider.BoGrounded)
+        if(IsGrounded())
+        //if (_playerCollider.BoGrounded)
         {
             _rigidBody2D.AddForce(new Vector2(swiped_vector.x * _x_force_scale, swiped_vector.y * _y_force_scale), ForceMode2D.Impulse);
             _swipe_vec = new Vector2(swiped_vector.x, swiped_vector.y);
         }
 #endif
     }
-#endregion
+    #endregion
 }
