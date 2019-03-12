@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Spine.Unity;
@@ -16,14 +17,19 @@ public class Player : MonoBehaviour {
     public float _y_force_scale = 0.01f;
     public float _x_force_scale = 0.01f;
 
-    public LayerMask groundLayer;
+    public LayerMask _groundLayer;
 
     private Rigidbody2D _rigidBody2D;
     private string _currentAnimation = "";
     private Quaternion _goalRotation = Quaternion.identity;
     private Camera _cam;
 
-    //private PlayerCollider _playerCollider;
+    [SerializeField]
+    private bool _boGrounded = false;
+
+    private Vector2 _old_velocity = Vector2.zero;
+    [SerializeField]
+    private bool _boInJump = false;
 
     private void Start()
     {
@@ -36,16 +42,17 @@ public class Player : MonoBehaviour {
     void Update()
     {
         TouchOrMouseInput.StTap tap = _touch_or_mouse.Tap;
+        Vector3 new_position = _graphics.transform.position;
         if (tap.Tap)
         {
-            Vector3 new_position;
             _goalRotation = ApplyTap(tap, out new_position);
-            _graphics.transform.position = new_position;
         }
         else
         {
-            Vector3 new_position;
             _goalRotation = ApplyKeyLeftRight(out new_position);
+        }
+        //if (_boInJump)
+        {
             _graphics.transform.position = new_position;
         }
 
@@ -61,6 +68,11 @@ public class Player : MonoBehaviour {
     }
 
     void FixedUpdate () {
+        var velocity = _rigidBody2D.velocity;
+        _boInJump = (_old_velocity.y != velocity.y);
+        _old_velocity = velocity;
+
+        _boGrounded = IsGrounded();
     }
 
 #region PrivateHelpFunctions
@@ -130,7 +142,7 @@ public class Player : MonoBehaviour {
         Vector2 direction = Vector2.down;
         float distance = 1.0f;
 
-        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(position, direction, distance, _groundLayer);
         if (hit.collider != null)
         {
             return true;
@@ -142,37 +154,34 @@ public class Player : MonoBehaviour {
     #endregion
 
     #region CalledByEvents
-    public int _swipe_count;
-    public Vector2 _swipe_vec;
+    public float _jump_force__vert = 1000;
+    public float _jump_force__hor = 750;
     public void DoSwipeOnPlayer()
     {
-#if false
-        Vector2 swiped_vector = (Vector2)_cam.ViewportToWorldPoint(_touch_or_mouse.Swiped.Distance);
-
-        float x0 = _rigidBody2D.velocity.x;
-        float y0 = _rigidBody2D.velocity.y;
-
-        float x = swiped_vector.x;
-        float y = swiped_vector.y;
-
-        var t = Time.deltaTime;
-        float v_x0 = (x - x0) / t;
-        float v_y0 = (y - y0) / t - 4.9f * t;
-
-        _rigidBody2D.AddForce(new Vector2(v_x0, v_y0) * _rigidBody2D.mass, ForceMode2D.Impulse);
-
-#else
         Vector2 swiped_vector = _touch_or_mouse.Swiped.Distance;
-        Debug.Log("swiped count = " + _swipe_count);
-        _swipe_count++;
 
-        if(IsGrounded())
-        //if (_playerCollider.BoGrounded)
+        if(_boGrounded)
         {
-            _rigidBody2D.AddForce(new Vector2(swiped_vector.x * _x_force_scale, swiped_vector.y * _y_force_scale), ForceMode2D.Impulse);
-            _swipe_vec = new Vector2(swiped_vector.x, swiped_vector.y);
+            float hor_jump = swiped_vector.x;
+            if (Math.Abs(hor_jump) < 10) hor_jump = 0;
+
+            Quaternion goal_rotation = _goalRotation;
+            if (hor_jump > 0)
+            {
+                _rigidBody2D.AddForce(new Vector2(_jump_force__hor, _jump_force__vert), ForceMode2D.Impulse);
+                goal_rotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if(hor_jump < 0)
+            {
+                _rigidBody2D.AddForce(new Vector2(-1.0f *_jump_force__hor, _jump_force__vert), ForceMode2D.Impulse);
+                goal_rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else
+            {
+                _rigidBody2D.AddForce(new Vector2(0, _jump_force__vert), ForceMode2D.Impulse);
+            }
+            _goalRotation = goal_rotation;
         }
-#endif
     }
     #endregion
 }

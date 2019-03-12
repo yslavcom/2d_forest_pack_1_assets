@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#if false
+
 public class PlayerCollider : MonoBehaviour
 {
     public string _groundTag = "";
@@ -43,3 +45,5 @@ public class PlayerCollider : MonoBehaviour
     public bool BoGrounded { get { return _boOnGround; } }
 
 }
+
+#endif
