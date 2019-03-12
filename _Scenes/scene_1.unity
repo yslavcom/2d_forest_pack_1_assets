@@ -1291,6 +1291,7 @@ GameObject:
   - component: {fileID: 674570314}
   - component: {fileID: 674570316}
   - component: {fileID: 674570315}
+  - component: {fileID: 674570317}
   m_Layer: 0
   m_Name: EnemyGoblin
   m_TagString: Untagged
@@ -1357,6 +1358,22 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &674570317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 674570313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1548e68728d7f684f96b8e1908ab9306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target_detection_radius: 50
+  _graphics: {fileID: 674570314}
+  _target_collider_name: Player
+  _overlap_detection: {fileID: 1687859883}
+  _boDetected: 0
 --- !u!4 &750823661 stripped
 Transform:
   m_PrefabParentObject: {fileID: 439372, guid: b67424be0d2bbf74ab8a0e90a2c90516, type: 2}
@@ -3155,6 +3172,46 @@ Prefab:
     - {fileID: 6037806, guid: 3664e85b6bcc7ca49b9502a8ced17919, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 3664e85b6bcc7ca49b9502a8ced17919, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1687859882
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1687859884}
+  - component: {fileID: 1687859883}
+  m_Layer: 0
+  m_Name: OverlapDetection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1687859883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1687859882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32bd94f948f2e0d43aba61ed65301c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1687859884
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1687859882}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10.877402, y: 4.2356377, z: 1.1328125}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1730585571
 GameObject:
   m_ObjectHideFlags: 0
