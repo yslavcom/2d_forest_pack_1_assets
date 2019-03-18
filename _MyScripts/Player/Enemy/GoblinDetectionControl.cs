@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyGoblinControl : MonoBehaviour {
+public class GoblinDetectionControl : MonoBehaviour {
 
     public float _target_detection_radius = 5;
     public Transform _graphics;
